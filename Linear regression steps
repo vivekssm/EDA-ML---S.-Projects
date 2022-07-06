@@ -1,0 +1,37 @@
+Do basic EDA on data and remove outliers and null values. 
+
+
+
+Then check if all conditions of regression are met. if  not take steps like  taking log of a variable if variable is not normally distributed
+
+
+
+Before Training the model use P-value and VIF score  to decide the Unimportant Variables. Don't drop all variables at once. drop one feature at a time and again check P-value and VIF score.This will drop all correlated Variables 
+
+
+
+After we decide the Important variables work on building the model. It is important to scale the Independent Variables(X) before we proceed for model building. Y remains as usual.
+
+
+
+In Linear Regression, we try out all the models and the model with best adjusted r-squared is the best model for our use.
+
+Types of model may be-
+
+1) Simple linear regression
+
+used when we have only one independent variable. We need to find weight in this model.
+
+2)Multiple linear regression
+
+used when we have more than one independent variable.We need to find weight in this model.
+
+3)Polynimial Variable
+
+Along with weight we also need to know the accurate powers of Independent variables in order to design the variables.
+
+4) Ridge & Lasso
+
+here we need hyperparameter tuning to find Accurate Lambda(it is called alpha in sklearn models). just like all models we need to find weights here too. Model here may be linear as well as Polynomial.
+
+After designing all the models. the model with best Adjusted r-squared score is finalised and goes to production
