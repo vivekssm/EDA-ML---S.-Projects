@@ -1,0 +1,56 @@
+import numpy as np
+from sklearn.datasets import make_regression
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import RepeatedKFold
+from sklearn.linear_model import LinearRegression
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import StackingRegressor
+np.random.seed(0)
+
+X = np.asarray(eval(input()))
+y = np.asarray(eval(input()))
+
+# get a stacking ensemble of models
+def get_stacking():
+	# define the base models
+	level0 = list()
+	level0.append(('knn', KNeighborsRegressor()))
+	level0.append(('cart', DecisionTreeRegressor()))
+
+	# define meta learner model it'll be a linear regression model
+	level1 = LinearRegression()
+	
+	# define the stacking ensemble for regression with level0 and meta model
+	model = StackingRegressor(estimators=level0, final_estimator=level1, cv=5)
+	return model
+
+# get a list of models to evaluate
+def get_models():
+	models = dict()
+	#intialize the object for knn for regression
+	models['knn'] = KNeighborsRegressor()
+	#intialize the object for decision tree for regression
+	models['cart'] = DecisionTreeRegressor()
+	models['stacking'] = get_stacking()
+	return models
+
+# evaluate a given model using cross-validation
+def evaluate_model(model, X, y):
+	cv = RepeatedKFold(n_splits=10, n_repeats=3)
+	
+	# evaluate the model using mean_absolute error and the above cross validation strategy
+	scores = cross_val_score(model, X, y, scoring='r2', cv = cv)
+	
+	return scores
+
+# get the models to evaluate
+models = get_models()
+
+# evaluate the models and store results
+results, names = list(), list()
+
+for name, model in sorted(models.items()):
+	scores = evaluate_model(model, X, y)
+	results.append(scores)
+	print('%s %.3f' % (name, np.mean(scores)))
